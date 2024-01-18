@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Import your preferred icon library
 import axios from 'axios';
-import PurchaseList from './purchaselist';
 
 const App = () => {
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeMenu, setActiveMenu] = useState('product');
   const [isMenuVisible, setMenuVisible] = useState(false); // State to manage menu visibility
   const [isMenuVisible2, setMenuVisible2] = useState(false);
   const [isMenuVisible3, setMenuVisible3] = useState(false);
@@ -15,23 +13,178 @@ const App = () => {
   const [isMenuVisible5, setMenuVisible5] = useState(false);
   const [isMenuVisible6, setMenuVisible6] = useState(false);
   const [isBottomMenuVisible, setBottomMenuVisible] = useState(true); // Set to true by default
-  const [isPurchaseListVisible, setPurchaseListVisible] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://192.168.56.1:5000/api/data');
-        setData(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  const renderMenuItems = () => {
+    if (isMenuVisible) {
+      return (
+        <View style={styles.menuDropdown}>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>List</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Add</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Purchase</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Sell</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return null;
+  };
 
-    fetchData();
-  }, []);
+  const renderMenuItems2 = () => {
+    if (isMenuVisible2) {
+      return (
+        <View style={styles.menuDropdown2}>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Add</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Attandance</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return null;
+  };
 
-  const handleMenuClick = (menu) => {
-    setActiveMenu(menu);
+  const renderMenuItems3 = () => {
+    if (isMenuVisible3) {
+      return (
+        <View style={styles.menuDropdown3}>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Add</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Wages</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return null;
+  };
+
+  const renderMenuItems4 = () => {
+    if (isMenuVisible4) {
+      return (
+        <View style={styles.menuDropdown4}>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Total</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Vendor</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Customer</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Clear</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return null;
+  };
+
+  const renderMenuItems5 = () => {
+    if (isMenuVisible5) {
+      return (
+        <View style={styles.menuDropdown5}>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Vendor List</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Customer List</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return null;
+  };
+
+  const renderMenuItems6 = () => {
+    if (isMenuVisible6) {
+      return (
+        <View style={styles.menuDropdown6}>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Purchase List</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Sales List</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Expenses List</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Reports</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>Monetizae</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return null;
+  };
+
+  const renderBottomMenuItems = () => {
+    if (isBottomMenuVisible) {
+      return (
+        <View style={styles.bottomMenuContainer}>
+          {/* Additional Bottom Menu Items */}
+
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="bars" size={20} color="#333" />
+            <Text>Menu</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="history" size={20} color="#333" />
+            <Text>History</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="home" size={20} color="#333" />
+            <Text>Home</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="shopping-cart" size={20} color="#333" />
+            <Text>Cart</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuItem}>
+            <Icon name="user" size={20} color="#333" />
+            <Text>Profile</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return null;
   };
 
   const toggleMenu = () => {
@@ -82,216 +235,18 @@ const App = () => {
     setMenuVisible6(false);
   };
 
-  const togglePurchaseList = () => {
-    setPurchaseListVisible(!isPurchaseListVisible);
-    console.log("isPurchaseListVisible:", isPurchaseListVisible);
-    
-    // Close other menus when opening the Purchase List
-    setMenuVisible(false);
-    setMenuVisible2(false);
-    setMenuVisible3(false);
-    setMenuVisible4(false);
-    setMenuVisible5(false);
-    setMenuVisible6(false);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://192.168.56.1:5000/api/data');
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  const renderPurchaseList = () => {
-    if (isPurchaseListVisible) {
-      console.log("Rendering Purchase List");
-      return <PurchaseList data={data} searchQuery={searchQuery} />;
-    }
-    return null;
-  };
-
-  const renderBody = () => {
-    switch (activeMenu) {
-      case 'product':
-      //  return <Text>Product List</Text>; // Replace with your actual product component
-      case 'employee':
-       // return <Text>Employee List</Text>; // Replace with your actual employee component
-      case 'expenses':
-      //  return <Text>Expenses List</Text>; // Replace with your actual expenses component
-      // Add more cases for other menu items as needed
-      case 'purchase':
-      //  return <PurchaseList data={data} searchQuery={searchQuery} />;
-      default:
-        return null;
-    }
-  };
-
-
-  const renderMenuItems = () => {
-    if (isMenuVisible) {
-      return (
-        <View style={styles.menuDropdown}>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>List</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Add</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Purchase</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Sell</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-    return null;
-  };
-
-  const renderMenuItems2 = () => {
-    if (isMenuVisible2) {
-      return (
-        <View style={styles.menuDropdown}>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Add</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Attandance</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-    return null;
-  };
-
-  const renderMenuItems3 = () => {
-    if (isMenuVisible3) {
-      return (
-        <View style={styles.menuDropdown}>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Add</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Wages</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-    return null;
-  };
-
-  const renderMenuItems4 = () => {
-    if (isMenuVisible4) {
-      return (
-        <View style={styles.menuDropdown}>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Total</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Vendor</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Customer</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Clear</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-    return null;
-  };
-
-  const renderMenuItems5 = () => {
-    if (isMenuVisible5) {
-      return (
-        <View style={styles.menuDropdown}>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Vendor List</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Customer List</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-    return null;
-  };
-
-  const renderMenuItems6 = () => {
-    if (isMenuVisible6) {
-      return (
-        <View style={styles.menuDropdown}>
-          <TouchableOpacity style={styles.menuItem} onPress={togglePurchaseList}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Purchase List</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Sales List</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Expenses List</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Reports</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="circle" size={15} color="#333" />
-            <Text>Monetizae</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-    return null;
-  };
-  const renderBottomMenuItems = () => {
-    if (isBottomMenuVisible) {
-      return (
-        <View style={styles.bottomMenuContainer}>
-          {/* Additional Bottom Menu Items */}
-
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="bars" size={20} color="#333" />
-            <Text>Menu</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="history" size={20} color="#333" />
-            <Text>History</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="home" size={20} color="#333" />
-            <Text>Home</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="shopping-cart" size={20} color="#333" />
-            <Text>Cart</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem}>
-            <Icon name="user" size={20} color="#333" />
-            <Text>Profile</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-    return null;
-  };
-
+    fetchData();
+  }, []);
 
   const renderItem = ({ item }) => (
     <View style={styles.tableRow}>
@@ -356,10 +311,7 @@ const App = () => {
         {renderMenuItems4()}
         {renderMenuItems5()}
         {renderMenuItems6()}
-        {renderPurchaseList()}
-        {renderBody()}
-        
-
+      
       </View>
 
       <Text style={styles.heading}>Product List</Text>
@@ -382,16 +334,19 @@ const App = () => {
         renderItem={renderItem}
       />
 
-      {/* Render the bottom menu items without the need for a trigger button */}
       {renderBottomMenuItems()}
+      
+     
     </View>
+    
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 15,
+    top: 22,
     backgroundColor: '#fff',
   },
   headerContainer: {
@@ -428,6 +383,62 @@ const styles = StyleSheet.create({
   menuDropdown: {
     position: 'absolute',
     top: 40,
+    left: -10,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 5,
+    zIndex: 1,
+  },
+  menuDropdown2: {
+    position: 'absolute',
+    top: 40,
+    left: 60,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 5,
+    zIndex: 1,
+  },
+  menuDropdown3: {
+    position: 'absolute',
+    top: 40,
+    left: 150,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 5,
+    zIndex: 1,
+  },
+  menuDropdown4: {
+    position: 'absolute',
+    top: 40,
+    left: 210,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 5,
+    zIndex: 1,
+  },
+  menuDropdown5: {
+    position: 'absolute',
+    top: 40,
+    left: 250,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 5,
+    zIndex: 1,
+  },
+  menuDropdown6: {
+    position: 'absolute',
+    top: 40,
+    left: 300,
     backgroundColor: '#fff',
     borderRadius: 5,
     borderWidth: 1,
@@ -467,7 +478,6 @@ const styles = StyleSheet.create({
   bottomMenuTriggerText: {
     color: '#fff',
   },
-
   bottomMenuContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -476,6 +486,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     padding: 5,
+    bottom: 20,
   },
 });
 

@@ -6,7 +6,6 @@ const PurchaseList = () => {
 
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeMenu, setActiveMenu] = useState('purchase');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,7 +20,6 @@ const PurchaseList = () => {
         fetchData();
       }, []);
 
-
     const renderItem = ({ item }) => (
         <View style={styles.tableRow}>
           <Text style={styles.tableCell}>{item.stockname}</Text>
@@ -35,10 +33,8 @@ const PurchaseList = () => {
       return (
         <View style={styles.container}>
           <View style={styles.headerContainer}>
-            <Text style={styles.heading}>IMS</Text>
-           
-           <Text style={styles.heading}>purchase library</Text>
-    
+          <Text style={styles.heading}>stock list</Text>
+
           <View style={styles.tableHeader}>
             <Text style={styles.tableHeaderCell}>name</Text>
             <Text style={styles.tableHeaderCell}>qnt</Text>
@@ -67,13 +63,16 @@ const PurchaseList = () => {
     const styles = StyleSheet.create({
       container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        padding: 15,
+        top: 22,
+        backgroundColor: '#fff',
       },
       heading: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 10,
+        padding: 5,
+        backgroundColor: '#1E90FF',
+        color: '#fff',
       },
       tableHeader: {
         flexDirection: 'row',
