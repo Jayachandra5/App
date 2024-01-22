@@ -11,6 +11,7 @@ import Menu from './Menu';
 import History from './History';
 import Cart from './Cart';
 import Profile from './Profile';
+import customerList from './customerList'
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -56,7 +57,7 @@ const Header = () => {
       />
       <UpperTab.Screen
         name="Dues"
-        component={Menu}
+        component={customerList}
         options={{
           tabBarIcon: () => (
             <Icon name="money" size={20} color="#333" />
