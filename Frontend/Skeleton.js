@@ -3,7 +3,8 @@ import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'r
 import Icon from 'react-native-vector-icons/FontAwesome'; // Import your preferred icon library
 import axios from 'axios';
 
-import PurchaseList from './purchaselist';
+import PurchaseList from '../DisplayMenus/purchaselist';
+import CustomerList from '../DisplayMenus/customerList';
 
 const Skeleton = ({ navigation }) => {
   const [data, setData] = useState([]);
@@ -16,15 +17,44 @@ const Skeleton = ({ navigation }) => {
   const [isMenuVisible6, setMenuVisible6] = useState(false);
   const [isBottomMenuVisible, setBottomMenuVisible] = useState(true); // Set to true by default
 
+  const [selectedMenuItem, setSelectedMenuItem] = useState('list');
+
+  const renderContent = () => {
+    switch (selectedMenuItem) {
+      case 'product':
+        return (
+          <View>
+            <Text style={styles.heading}>Product List</Text>
+            <View style={styles.tableHeader}>
+              <Text style={styles.tableHeaderCell}>stockname</Text>
+              <Text style={styles.tableHeaderCell}>quantity</Text>
+              <Text style={styles.tableHeaderCell}>mrp</Text>
+              <Text style={styles.tableHeaderCell}>price</Text>
+              <Text style={styles.tableHeaderCell}>tax</Text>
+            </View>
+          </View>
+        );
+      case 'list':
+        return <CustomerList />;
+
+      case 'purs':
+        return <PurchaseList />;
+      
+      // Add cases for other menu items as needed
+      default:
+        return null;
+    }
+  };
+
   const renderMenuItems = () => {
     if (isMenuVisible) {
       return (
         <View style={styles.menuDropdown}>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => setSelectedMenuItem('list')}>
             <Icon name="circle" size={15} color="#333" />
             <Text>List</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem}  onPress={() => setSelectedMenuItem('purs')}>
             <Icon name="circle" size={15} color="#333" />
             <Text>Add</Text>
           </TouchableOpacity>
@@ -238,29 +268,6 @@ const Skeleton = ({ navigation }) => {
     setMenuVisible6(false);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://192.168.56.1:5000/api/data');
-        setData(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const renderItem = ({ item }) => (
-    <View style={styles.tableRow}>
-      <Text style={styles.tableCell}>{item.stockname}</Text>
-      <Text style={styles.tableCell}>{item.quantity}</Text>
-      <Text style={styles.tableCell}>{item.mrp}</Text>
-      <Text style={styles.tableCell}>{item.price}</Text>
-      <Text style={styles.tableCell}>{item.tax}</Text>
-    </View>
-  );
-
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -313,30 +320,11 @@ const Skeleton = ({ navigation }) => {
         {renderMenuItems4()}
         {renderMenuItems5()}
         {renderMenuItems6()}
-
       </View>
 
-      <Text style={styles.heading}>Product List</Text>
-
-      <View style={styles.tableHeader}>
-        <Text style={styles.tableHeaderCell}>stockname</Text>
-        <Text style={styles.tableHeaderCell}>quantity</Text>
-        <Text style={styles.tableHeaderCell}>mrp</Text>
-        <Text style={styles.tableHeaderCell}>price</Text>
-        <Text style={styles.tableHeaderCell}>tax</Text>
-      </View>
-
-      <FlatList
-        data={data.filter((item) =>
-          item.stockname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (item.quantity &&
-            item.quantity.toString().toLowerCase().includes(searchQuery.toLowerCase()))
-        )}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-      />
+      {renderContent()}
+      
     </View>
-
   );
 };
 

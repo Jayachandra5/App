@@ -5,13 +5,13 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import interfacescreen from './Skeleton';
-import PurchaseList from './purchaselist';
-import Menu from './Menu';
-import History from './History';
-import Cart from './Cart';
-import Profile from './Profile';
-import customerList from './customerList'
+import interfacescreen from './Frontend/Skeleton';
+import PurchaseList from './DisplayMenus/purchaselist';
+import Menu from './Frontend/Menu';
+import History from './Frontend/History';
+import Cart from './Frontend/Cart';
+import Profile from './Frontend/Profile';
+import customerList from './DisplayMenus/customerList'
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -22,10 +22,11 @@ const BottomTab = createBottomTabNavigator();
 const Header = () => {
   return (
     <UpperTab.Navigator
-      tabBarOptions={{
-        labelStyle: { fontSize: 10 },
-        alignItems: 'center',
-
+      screenOptions={{
+        tabBarLabelStyle: {
+          fontSize: 10
+        },
+        alignItems: 'center'
       }}
     >
       <UpperTab.Screen
@@ -143,7 +144,6 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="IMS" component={Header} />
         <Stack.Screen name="BottomScreen" component={Footer} />
         <Stack.Screen name="Purchase List" component={PurchaseList} />
       </Stack.Navigator>

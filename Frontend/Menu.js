@@ -36,9 +36,6 @@ const Menu = ({ navigation }) => {
       <Icon name="circle" size={15} color="#333" />
             <Text>List</Text>
       </TouchableOpacity>
-
-
-      
     </View>
   );
 };

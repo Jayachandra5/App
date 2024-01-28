@@ -31,6 +31,7 @@ const PurchaseList = () => {
       );
 
       return (
+        
         <View style={styles.container}>
           <View style={styles.headerContainer}>
           <Text style={styles.heading}>stock list</Text>
