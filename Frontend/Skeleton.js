@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import PurchaseList from '../DisplayMenus/purchaselist';
 import CustomerList from '../DisplayMenus/customerList';
+import VendourList from  '../DisplayMenus/vendourList';
 
 const Skeleton = ({ navigation }) => {
   const [data, setData] = useState([]);
@@ -34,8 +35,11 @@ const Skeleton = ({ navigation }) => {
             </View>
           </View>
         );
-      case 'list':
+      case 'customerList':
         return <CustomerList />;
+
+      case 'vendourList':
+        return <VendourList />;
 
       case 'purs':
         return <PurchaseList />;
@@ -50,7 +54,7 @@ const Skeleton = ({ navigation }) => {
     if (isMenuVisible) {
       return (
         <View style={styles.menuDropdown}>
-          <TouchableOpacity style={styles.menuItem} onPress={() => setSelectedMenuItem('list')}>
+          <TouchableOpacity style={styles.menuItem} >
             <Icon name="circle" size={15} color="#333" />
             <Text>List</Text>
           </TouchableOpacity>
@@ -138,11 +142,11 @@ const Skeleton = ({ navigation }) => {
     if (isMenuVisible5) {
       return (
         <View style={styles.menuDropdown5}>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => setSelectedMenuItem('vendourList')}>
             <Icon name="circle" size={15} color="#333" />
             <Text>Vendor List</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => setSelectedMenuItem('customerList')}>
             <Icon name="circle" size={15} color="#333" />
             <Text>Customer List</Text>
           </TouchableOpacity>

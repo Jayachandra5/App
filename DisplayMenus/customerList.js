@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TextInput } from 'react-native';
 import axios from 'axios';
 
-const PurchaseList = () => {
+import styles from './styles';
+
+const customerList = () => {
 
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -34,6 +36,15 @@ const PurchaseList = () => {
             <View style={styles.headerContainer}>
                 <Text style={styles.heading}>customerList list</Text>
 
+                <View style={styles.searchContainer}>
+                <TextInput
+                    style={styles.searchInput}
+                    placeholder="Search by name"
+                    onChangeText={(text) => setSearchQuery(text)}
+                    value={searchQuery}
+                />
+            </View>
+
                 <View style={styles.tableHeader}>
                     <Text style={styles.tableHeaderCell}>name</Text>
                     <Text style={styles.tableHeaderCell}>amount</Text>
@@ -61,42 +72,5 @@ const PurchaseList = () => {
 
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 15,
-        top: 22,
-        backgroundColor: '#fff',
-    },
-    heading: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        padding: 5,
-        backgroundColor: '#1E90FF',
-        color: '#fff',
-    },
-    tableHeader: {
-        flexDirection: 'row',
-        backgroundColor: '#f2f2f2',
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-    },
-    tableHeaderCell: {
-        flex: 1,
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-    tableRow: {
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-        padding: 10,
-    },
-    tableCell: {
-        flex: 1,
-        textAlign: 'center',
-    },
-});
 
-export default PurchaseList;
+export default customerList;
