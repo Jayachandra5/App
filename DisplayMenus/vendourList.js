@@ -54,6 +54,16 @@ const VendorList = () => {
                 )}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={renderItem}
+                ListHeaderComponent={
+                    <View style={{ paddingHorizontal: 15 }}>
+                        {/* Optional: You can add a header if needed */}
+                    </View>
+                }
+                ListFooterComponent={
+                    <View style={{ paddingHorizontal: 15 }}>
+                        {/* Optional: You can add a footer if needed */}
+                    </View>
+                }
             />
         </View>
     );

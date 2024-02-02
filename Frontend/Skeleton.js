@@ -3,9 +3,12 @@ import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'r
 import Icon from 'react-native-vector-icons/FontAwesome'; // Import your preferred icon library
 import axios from 'axios';
 
-import PurchaseList from '../DisplayMenus/purchaselist';
+
 import CustomerList from '../DisplayMenus/customerList';
 import VendourList from  '../DisplayMenus/vendourList';
+import PurchaseList from '../DisplayMenus/purchaselist';
+import SalesList from '../DisplayMenus/salesList';
+import ExpensesList from '../DisplayMenus/expensesList';
 
 const Skeleton = ({ navigation }) => {
   const [data, setData] = useState([]);
@@ -41,8 +44,14 @@ const Skeleton = ({ navigation }) => {
       case 'vendourList':
         return <VendourList />;
 
-      case 'purs':
+      case 'purchaseList':
         return <PurchaseList />;
+      
+      case 'salesList':
+        return <SalesList />;
+
+      case 'expensesList':
+        return <ExpensesList />;
       
       // Add cases for other menu items as needed
       default:
@@ -58,7 +67,7 @@ const Skeleton = ({ navigation }) => {
             <Icon name="circle" size={15} color="#333" />
             <Text>List</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}  onPress={() => setSelectedMenuItem('purs')}>
+          <TouchableOpacity style={styles.menuItem}>
             <Icon name="circle" size={15} color="#333" />
             <Text>Add</Text>
           </TouchableOpacity>
@@ -161,16 +170,15 @@ const Skeleton = ({ navigation }) => {
       return (
         <View style={styles.menuDropdown6}>
           <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => navigation.navigate('Purchase List')}>
+            style={styles.menuItem} onPress={() => setSelectedMenuItem('purchaseList')}>
             <Icon name="circle" size={15} color="#333" />
             <Text>Purchase List</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => setSelectedMenuItem('salesList')}>
             <Icon name="circle" size={15} color="#333" />
             <Text>Sales List</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => setSelectedMenuItem('expensesList')}>
             <Icon name="circle" size={15} color="#333" />
             <Text>Expenses List</Text>
           </TouchableOpacity>
@@ -274,17 +282,8 @@ const Skeleton = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
+     
         <Text style={styles.heading}>IMS</Text>
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search by stockname"
-            onChangeText={(text) => setSearchQuery(text)}
-            value={searchQuery}
-          />
-        </View>
-      </View>
 
       {/* Updated Menu with conditional rendering of menu items */}
       <View style={styles.menuContainer}>
@@ -348,19 +347,11 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
+    textAlign: 'center',
     padding: 5,
+    marginBottom: 16,
     backgroundColor: '#1E90FF',
     color: '#fff',
-  },
-  searchContainer: {
-    flex: 1,
-    marginLeft: 10,
-  },
-  searchInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    paddingHorizontal: 10,
   },
   menuContainer: {
     flexDirection: 'row',

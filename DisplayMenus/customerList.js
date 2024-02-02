@@ -37,13 +37,13 @@ const customerList = () => {
                 <Text style={styles.heading}>customerList list</Text>
 
                 <View style={styles.searchContainer}>
-                <TextInput
-                    style={styles.searchInput}
-                    placeholder="Search by name"
-                    onChangeText={(text) => setSearchQuery(text)}
-                    value={searchQuery}
-                />
-            </View>
+                    <TextInput
+                        style={styles.searchInput}
+                        placeholder="Search by name"
+                        onChangeText={(text) => setSearchQuery(text)}
+                        value={searchQuery}
+                    />
+                </View>
 
                 <View style={styles.tableHeader}>
                     <Text style={styles.tableHeaderCell}>name</Text>
@@ -62,14 +62,20 @@ const customerList = () => {
                     )}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem}
+                    ListHeaderComponent={
+                        <View style={{ paddingHorizontal: 15 }}>
+                            {/* Optional: You can add a header if needed */}
+                        </View>
+                    }
+                    ListFooterComponent={
+                        <View style={{ paddingHorizontal: 15 }}>
+                            {/* Optional: You can add a footer if needed */}
+                        </View>
+                    }
                 />
-
-
             </View>
         </View>
-
     );
-
 };
 
 

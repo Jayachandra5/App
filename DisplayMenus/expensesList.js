@@ -4,15 +4,14 @@ import axios from 'axios';
 
 import styles from './styles';
 
-const PurchaseList = () => {
-
+const ExpensesList = () => {
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://192.168.56.1:5000/api/purchaseList');
+        const response = await axios.get('http://192.168.56.1:5000/api/expensesList');
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -24,22 +23,16 @@ const PurchaseList = () => {
 
   const renderItem = ({ item }) => (
     <View style={styles.tableRow}>
-      <Text style={styles.tableCell}>{item.stockName}</Text>
-      <Text style={styles.tableCell}>{item.qnt}</Text>
+      <Text style={styles.tableCell}>{item.name}</Text>
       <Text style={styles.tableCell}>{item.amount}</Text>
-      <Text style={styles.tableCell}>{item.qntAvl}</Text>
       <Text style={styles.tableCell}>{item.date}</Text>
-      <Text style={styles.tableCell}>{item.vendourName}</Text>
-
     </View>
   );
 
   return (
-
     <View style={styles.container}>
-
       <View style={styles.headerContainer}>
-        <Text style={styles.heading}>purchase list</Text>
+        <Text style={styles.heading}>Expenses list</Text>
 
         <View style={styles.searchContainer}>
           <TextInput
@@ -52,17 +45,15 @@ const PurchaseList = () => {
 
         <View style={styles.tableHeader}>
           <Text style={styles.tableHeaderCell}>name</Text>
-          <Text style={styles.tableHeaderCell}>qnt</Text>
           <Text style={styles.tableHeaderCell}>amount</Text>
-          <Text style={styles.tableHeaderCell}>qntAvl</Text>
           <Text style={styles.tableHeaderCell}>date</Text>
-          <Text style={styles.tableHeaderCell}>vendour</Text>
         </View>
 
         <FlatList
-          data={data.filter((item) =>
-            item.stockName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (item.vendourName && item.vendourName.toLowerCase().includes(searchQuery.toLowerCase()))
+          data={data.filter(
+            (item) =>
+              item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              (item.date && item.date.toLowerCase().includes(searchQuery.toLowerCase()))
           )}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
@@ -82,4 +73,4 @@ const PurchaseList = () => {
   );
 };
 
-export default PurchaseList;
+export default ExpensesList;
