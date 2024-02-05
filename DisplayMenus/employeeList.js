@@ -4,14 +4,14 @@ import axios from 'axios';
 
 import styles from './styles';
 
-const CustomerDue = () => {
+const EmployeeListData = () => {
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://192.168.56.1:5000/api/CustomerDue');
+        const response = await axios.get('http://192.168.56.1:5000/api/employeeList');
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -23,15 +23,15 @@ const CustomerDue = () => {
 
   const renderItem = ({ item }) => (
     <View style={styles.tableRow}>
-      <Text style={styles.tableCell}>{item.customer}</Text>
-      <Text style={styles.tableCell}>{item.csdue}</Text>
+      <Text style={styles.tableCell}>{item.empname}</Text>
+      <Text style={styles.tableCell}>{item.salary}</Text>
     </View>
   );
 
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.heading}>Customer Due list</Text>
+        <Text style={styles.heading}>Employee list</Text>
 
         <View style={styles.searchContainer}>
           <TextInput
@@ -50,7 +50,7 @@ const CustomerDue = () => {
         <FlatList
           data={data.filter(
             (item) =>
-            item.customer && item.customer.toLowerCase().includes(searchQuery.toLowerCase())
+            item.empname && item.empname.toLowerCase().includes(searchQuery.toLowerCase()) 
           )}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
@@ -70,4 +70,4 @@ const CustomerDue = () => {
   );
 };
 
-export default CustomerDue;
+export default EmployeeListData;

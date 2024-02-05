@@ -4,11 +4,15 @@ import Icon from 'react-native-vector-icons/FontAwesome'; // Import your preferr
 import axios from 'axios';
 
 
+import ProductList from '../DisplayMenus/productList';
 import CustomerList from '../DisplayMenus/customerList';
 import VendourList from  '../DisplayMenus/vendourList';
 import PurchaseList from '../DisplayMenus/purchaselist';
 import SalesList from '../DisplayMenus/salesList';
 import ExpensesList from '../DisplayMenus/expensesList';
+import VendourDue from '../DisplayMenus/vendourDue';
+import CustomerDue from '../DisplayMenus/customerDue';
+import EmployeeListData from '../DisplayMenus/employeeList';
 
 const Skeleton = ({ navigation }) => {
   const [data, setData] = useState([]);
@@ -26,18 +30,11 @@ const Skeleton = ({ navigation }) => {
   const renderContent = () => {
     switch (selectedMenuItem) {
       case 'product':
-        return (
-          <View>
-            <Text style={styles.heading}>Product List</Text>
-            <View style={styles.tableHeader}>
-              <Text style={styles.tableHeaderCell}>stockname</Text>
-              <Text style={styles.tableHeaderCell}>quantity</Text>
-              <Text style={styles.tableHeaderCell}>mrp</Text>
-              <Text style={styles.tableHeaderCell}>price</Text>
-              <Text style={styles.tableHeaderCell}>tax</Text>
-            </View>
-          </View>
-        );
+        return <ProductList />;
+
+      case 'employeeList':
+        return <EmployeeListData />;
+
       case 'customerList':
         return <CustomerList />;
 
@@ -52,6 +49,12 @@ const Skeleton = ({ navigation }) => {
 
       case 'expensesList':
         return <ExpensesList />;
+
+      case 'vendourDue':
+        return <VendourDue />;
+
+      case 'customerDue':
+        return <CustomerDue />;
       
       // Add cases for other menu items as needed
       default:
@@ -63,7 +66,7 @@ const Skeleton = ({ navigation }) => {
     if (isMenuVisible) {
       return (
         <View style={styles.menuDropdown}>
-          <TouchableOpacity style={styles.menuItem} >
+          <TouchableOpacity style={styles.menuItem}  onPress={() => setSelectedMenuItem('product')}>
             <Icon name="circle" size={15} color="#333" />
             <Text>List</Text>
           </TouchableOpacity>
@@ -97,6 +100,10 @@ const Skeleton = ({ navigation }) => {
             <Icon name="circle" size={15} color="#333" />
             <Text>Attandance</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem} onPress={() => setSelectedMenuItem('employeeList')}>
+            <Icon name="circle" size={15} color="#333" />
+            <Text>List</Text>
+          </TouchableOpacity>
         </View>
       );
     }
@@ -129,11 +136,11 @@ const Skeleton = ({ navigation }) => {
             <Icon name="circle" size={15} color="#333" />
             <Text>Total</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => setSelectedMenuItem('vendourDue')}>
             <Icon name="circle" size={15} color="#333" />
             <Text>Vendor</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => setSelectedMenuItem('customerDue')}>
             <Icon name="circle" size={15} color="#333" />
             <Text>Customer</Text>
           </TouchableOpacity>

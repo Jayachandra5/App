@@ -13,6 +13,7 @@ import Cart from './Frontend/Cart';
 import Profile from './Frontend/Profile';
 import customerList from './DisplayMenus/customerList'
 
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const UpperTab = createMaterialTopTabNavigator();

@@ -34,6 +34,82 @@ app.get('/api/data', async (req, res) => {
   }
 });
 
+app.get('/api/employeeList', async (req, res) => {
+  try {
+    // Connect to the database
+    await sql.connect(config);
+
+    // Query the database
+    const result = await sql.query('SELECT * FROM employeeData');
+
+    // Send the data to the React Native app
+    res.json(result.recordset);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  } finally {
+    // Close the database connection
+    await sql.close();
+  }
+});
+
+app.get('/api/vendourDue', async (req, res) => {
+  try {
+      // Connect to the database
+      await sql.connect(config);
+
+      // Query the database for customer table
+      const result = await sql.query('SELECT * FROM vendourDue');
+
+      // Send the data to the React Native app
+      res.json(result.recordset);
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Server Error');
+  } finally {
+      // Close the database connection
+      await sql.close();
+  }
+});
+
+app.get('/api/CustomerDue', async (req, res) => {
+  try {
+      // Connect to the database
+      await sql.connect(config);
+
+      // Query the database for customer table
+      const result = await sql.query('SELECT * FROM csDue');
+
+      // Send the data to the React Native app
+      res.json(result.recordset);
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Server Error');
+  } finally {
+      // Close the database connection
+      await sql.close();
+  }
+});
+
+app.get('/api/customers', async (req, res) => {
+  try {
+      // Connect to the database
+      await sql.connect(config);
+
+      // Query the database for customer table
+      const result = await sql.query('SELECT * FROM customerTableDataFinal');
+
+      // Send the data to the React Native app
+      res.json(result.recordset);
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Server Error');
+  } finally {
+      // Close the database connection
+      await sql.close();
+  }
+});
+
 app.get('/api/customers', async (req, res) => {
   try {
       // Connect to the database
