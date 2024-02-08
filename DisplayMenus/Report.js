@@ -5,38 +5,16 @@ import { TextInput } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Report = () => {
-
     const [data, setData] = useState([]);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const formattedStartDate = startDate.toDateString();
     const formattedEndDate = endDate.toDateString();
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('http://192.168.56.1:5000/api/data');
-                setData(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    const renderItem = ({ item }) => (
-        <View style={styles.tableRow}>
-            <Text style={styles.tableCell}>{item.stockname}</Text>
-            <Text style={styles.tableCell}>{item.quantity}</Text>
-            <Text style={styles.tableCell}>{item.mrp}</Text>
-            <Text style={styles.tableCell}>{item.price}</Text>
-            <Text style={styles.tableCell}>{item.tax}</Text>
-        </View>
-    );
 
     const handleStartDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || startDate;
@@ -49,6 +27,49 @@ const Report = () => {
         setShowEndDatePicker(false);
         setEndDate(currentDate);
     };
+
+    const displayReport = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const startDateISOString = startDate.toISOString();
+            const endDateISOString = endDate.toISOString();
+    
+            const response = await axios.get('http://192.168.56.1:5000/api/reportData', {
+                params: {
+                    date1: startDateISOString,
+                    date2: endDateISOString
+                }
+            });
+            setData(response.data);
+            console.log('hi');
+        } catch (error) {
+            setError('Error fetching report data');
+            console.error('Error fetching report data:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    useEffect(() => {
+        displayReport();
+    }, []);
+
+    const handleDoneButtonPress = () => {
+        displayReport();
+    };
+    
+    
+    const renderItem = ({ item }) => {
+    
+        return (
+            <View style={styles.tableRow}>
+                <Text style={styles.tableCell}>{item.stockName}</Text>
+                <Text style={styles.tableCell}>{item.totalAmount}</Text>
+            </View>
+        );
+    };
+    
 
     return (
         <View style={styles.container}>
@@ -84,7 +105,10 @@ const Report = () => {
                     )}
                 </View>
 
-                <Button title="Done" onPress={() => console.log("Filter button pressed")} />
+                <Button title="Done" onPress={handleDoneButtonPress} />
+
+                {loading && <Text>Loading...</Text>}
+                {error && <Text>{error}</Text>}
 
                 <View style={styles.tableHeader}>
                     <Text style={styles.tableHeaderCell}>Name</Text>
@@ -96,7 +120,6 @@ const Report = () => {
 
                 <FlatList
                     data={data}
-                    keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem}
                     ListHeaderComponent={
                         <View style={{ paddingHorizontal: 15 }}>
@@ -113,6 +136,7 @@ const Report = () => {
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {
