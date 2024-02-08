@@ -14,6 +14,8 @@ import VendourDue from '../DisplayMenus/vendourDue';
 import CustomerDue from '../DisplayMenus/customerDue';
 import EmployeeListData from '../DisplayMenus/employeeList';
 
+import Report from '../DisplayMenus/Report';
+
 const Skeleton = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -55,6 +57,9 @@ const Skeleton = ({ navigation }) => {
 
       case 'customerDue':
         return <CustomerDue />;
+
+      case 'report':
+        return <Report />;
       
       // Add cases for other menu items as needed
       default:
@@ -189,7 +194,7 @@ const Skeleton = ({ navigation }) => {
             <Icon name="circle" size={15} color="#333" />
             <Text>Expenses List</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => setSelectedMenuItem('report')}>
             <Icon name="circle" size={15} color="#333" />
             <Text>Reports</Text>
           </TouchableOpacity>
