@@ -286,7 +286,6 @@ const getOpening = async (stockName,date1) => {
   }
 };
 
-
 const getSales = async (stockName,date1,date2) => {
   try {
     // Create a new connection pool
@@ -313,12 +312,16 @@ const getSales = async (stockName,date1,date2) => {
   }
 };
 
-
 const getReportDataFull = async (date1, date2) => {
   try {
     // Example: Get report data based on date range
     const reportDatafun = await getReportData(date1, date2);
     const fullReportData = [];
+    let totalStockNames = 0;
+    let finaltotalAmount = 0;
+    let totalQntAvl =0;
+    let totalQuantity = 0;
+    let totalSales = 0;
 
     console.log("reportDataFun");
     console.log(reportDatafun);
@@ -336,13 +339,29 @@ const getReportDataFull = async (date1, date2) => {
         totalQnt: salesData.length > 0 ? salesData[0].totalQnt : 0
       };
 
+      totalStockNames++;
+      finaltotalAmount += item.totalAmount;
+      totalQntAvl += mergedData.qntAvl;
+      totalQuantity += mergedData.quantity;
+      totalSales += mergedData.totalQnt;
+
       fullReportData.push(mergedData);
     }
 
+    const totals = {
+      totalStockNames,
+      finaltotalAmount,
+      totalQntAvl,
+      totalQuantity,
+      totalSales
+    };
+
     console.log("Final report Data");
     console.log(fullReportData);
+    console.log("Totals");
+    console.log(totals);
 
-    return fullReportData;
+    return { fullReportData, totals };
   } catch (error) {
     console.error('Error getting report data:', error);
     throw error;
@@ -355,6 +374,7 @@ app.get('/api/reportData', async (req, res) => {
   try {
     // Get full report data based on date range
     const fullReportData = await getReportDataFull(date1, date2);
+    console.log("Final Return");
     console.log(fullReportData);
     res.json(fullReportData);
   } catch (error) {
@@ -362,26 +382,6 @@ app.get('/api/reportData', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-
-// GET endpoint for fetching report data
-app.get('/api/reportDa', async (req, res) => {
-  const { date1, date2 } = req.query;
-  try {
-    // Example: Get report data based on date range
-    const reportData = await getReportData(date1, date2);
-    getqnt('apple');
-    getSales('apple','2024-01-01','2024-02-13');
-    getOpening('apple','2024-02-01',);
-
-    console.log(reportData);
-    res.json(reportData);
-  } catch (error) {
-    console.error('Error getting report data:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
 
 // Start the server
 const PORT = process.env.PORT || 5000;

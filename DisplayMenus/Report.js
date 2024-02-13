@@ -6,12 +6,15 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Report = () => {
     const [data, setData] = useState([]);
+    const [totals, setTotals] = useState({});
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [isDonePressed, setIsDonePressed] = useState(false);
 
     const formattedStartDate = startDate.toDateString();
     const formattedEndDate = endDate.toDateString();
@@ -41,8 +44,9 @@ const Report = () => {
                     date2: endDateISOString
                 }
             });
-            setData(response.data);
-            console.log('hi');
+            setData(response.data.fullReportData);
+            setTotals(response.data.totals);
+            setIsDataLoaded(true);
         } catch (error) {
             setError('Error fetching report data');
             console.error('Error fetching report data:', error);
@@ -51,17 +55,16 @@ const Report = () => {
         }
     };
     
+    const handleDoneButtonPress = () => {
+        displayReport();
+        setIsDonePressed(true);
+    };
+    
     useEffect(() => {
         displayReport();
     }, []);
 
-    const handleDoneButtonPress = () => {
-        displayReport();
-    };
-    
-    
     const renderItem = ({ item }) => {
-    
         return (
             <View style={styles.tableRow}>
                 <Text style={styles.tableCell}>{item.stockName}</Text>
@@ -72,7 +75,20 @@ const Report = () => {
             </View>
         );
     };
-    
+
+    const TotalsComponent = () => {
+        if (!isDonePressed) return null;
+        
+        return (
+            <View style={styles.tableRow}>
+                <Text style={styles.tableCell}>Total Stock Names: {totals.totalStockNames}</Text>
+                <Text style={styles.tableCell}>Total Amount: {totals.finaltotalAmount}</Text>
+                <Text style={styles.tableCell}>Total Qnt Avl: {totals.totalQntAvl}</Text>
+                <Text style={styles.tableCell}>Total Quantity: {totals.totalQuantity}</Text>
+                <Text style={styles.tableCell}>Total Sales: {totals.totalSales}</Text>
+            </View>
+        );
+    };
 
     return (
         <View style={styles.container}>
@@ -113,33 +129,27 @@ const Report = () => {
                 {loading && <Text>Loading...</Text>}
                 {error && <Text>{error}</Text>}
 
-                <View style={styles.tableHeader}>
-                    <Text style={styles.tableHeaderCell}>Name</Text>
-                    <Text style={styles.tableHeaderCell}>Qnt Avl</Text>
-                    <Text style={styles.tableHeaderCell}>Opening</Text>
-                    <Text style={styles.tableHeaderCell}>Purchased</Text>
-                    <Text style={styles.tableHeaderCell}>Sold</Text>
-                </View>
+                {isDataLoaded && (
+                    <>
+                        <View style={styles.tableHeader}>
+                            <Text style={styles.tableHeaderCell}>Name</Text>
+                            <Text style={styles.tableHeaderCell}>Qnt Avl</Text>
+                            <Text style={styles.tableHeaderCell}>Opening</Text>
+                            <Text style={styles.tableHeaderCell}>Purchased</Text>
+                            <Text style={styles.tableHeaderCell}>Sold</Text>
+                        </View>
 
-                <FlatList
-                    data={data}
-                    renderItem={renderItem}
-                    ListHeaderComponent={
-                        <View style={{ paddingHorizontal: 15 }}>
-                            {/* Optional: You can add a header if needed */}
-                        </View>
-                    }
-                    ListFooterComponent={
-                        <View style={{ paddingHorizontal: 15 }}>
-                            {/* Optional: You can add a footer if needed */}
-                        </View>
-                    }
-                />
+                        <FlatList
+                            data={data}
+                            renderItem={renderItem}
+                            ListFooterComponent={<TotalsComponent />}
+                        />
+                    </>
+                )}
             </View>
         </View>
     );
 };
-
 
 const styles = StyleSheet.create({
     container: {
