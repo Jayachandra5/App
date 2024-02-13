@@ -65,7 +65,10 @@ const Report = () => {
         return (
             <View style={styles.tableRow}>
                 <Text style={styles.tableCell}>{item.stockName}</Text>
+                <Text style={styles.tableCell}>{item.quantity}</Text>
+                <Text style={styles.tableCell}>{item.qntAvl}</Text>
                 <Text style={styles.tableCell}>{item.totalAmount}</Text>
+                <Text style={styles.tableCell}>{item.totalQnt}</Text>
             </View>
         );
     };

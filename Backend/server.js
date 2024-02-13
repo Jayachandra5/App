@@ -314,8 +314,58 @@ const getSales = async (stockName,date1,date2) => {
 };
 
 
-// GET endpoint for fetching report data
+const getReportDataFull = async (date1, date2) => {
+  try {
+    // Example: Get report data based on date range
+    const reportDatafun = await getReportData(date1, date2);
+    const fullReportData = [];
+
+    console.log("reportDataFun");
+    console.log(reportDatafun);
+
+    for (const item of reportDatafun) {
+      const openingData = await getOpening(item.stockName, date1);
+      const qntData = await getqnt(item.stockName);
+      const salesData = await getSales(item.stockName, date1, date2);
+
+      const mergedData = {
+        stockName: item.stockName,
+        totalAmount: item.totalAmount,
+        qntAvl: openingData.length > 0 ? openingData[0].qntAvl : 0,
+        quantity: qntData.length > 0 ? qntData[0].quantity : 0,
+        totalQnt: salesData.length > 0 ? salesData[0].totalQnt : 0
+      };
+
+      fullReportData.push(mergedData);
+    }
+
+    console.log("Final report Data");
+    console.log(fullReportData);
+
+    return fullReportData;
+  } catch (error) {
+    console.error('Error getting report data:', error);
+    throw error;
+  }
+};
+
+
 app.get('/api/reportData', async (req, res) => {
+  const { date1, date2 } = req.query;
+  try {
+    // Get full report data based on date range
+    const fullReportData = await getReportDataFull(date1, date2);
+    console.log(fullReportData);
+    res.json(fullReportData);
+  } catch (error) {
+    console.error('Error getting report data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+// GET endpoint for fetching report data
+app.get('/api/reportDa', async (req, res) => {
   const { date1, date2 } = req.query;
   try {
     // Example: Get report data based on date range
