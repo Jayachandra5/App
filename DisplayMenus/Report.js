@@ -78,8 +78,8 @@ const Report = () => {
 
     const TotalsComponent = () => {
         if (!isDonePressed) return null;
-        
         return (
+            <View>
             <View style={styles.tableRow}>
                 <Text style={styles.tableCell}>Total Stock Names: {totals.totalStockNames}</Text>
                 <Text style={styles.tableCell}>Total Amount: {totals.finaltotalAmount}</Text>
@@ -87,6 +87,34 @@ const Report = () => {
                 <Text style={styles.tableCell}>Total Quantity: {totals.totalQuantity}</Text>
                 <Text style={styles.tableCell}>Total Sales: {totals.totalSales}</Text>
             </View>
+            <View style={styles.tableRow}>
+                {/* Empty row */}
+                <Text style={styles.tableCell}></Text>
+                <Text style={styles.tableCell}></Text>
+                <Text style={styles.tableCell}></Text>
+                <Text style={styles.tableCell}></Text>
+                <Text style={styles.tableCell}></Text>
+            </View>
+            <View style={styles.tableRow}>
+                <Text style={styles.tableCell}>Total Stock Sold: {totals.totalStockSold}</Text>
+            </View>
+
+            <View style={styles.tableRow}>
+                <Text style={styles.tableCell}>Total Sales Amount: {totals.totalSalesAmount}</Text>
+            </View>
+
+            <View style={styles.tableRow}>
+                <Text style={styles.tableCell}>Total Profit Amount: {totals.totalProfitAmount}</Text>
+            </View>
+
+            <View style={styles.tableRow}>
+                <Text style={styles.tableCell}>Total Expenses: {totals.totalExpensesAmount}</Text>
+            </View>
+
+            <View style={styles.tableRow}>
+                <Text style={styles.tableCell}>Total Purchase: {totals.totalPurchaseAmount}</Text>
+            </View>
+        </View>        
         );
     };
 

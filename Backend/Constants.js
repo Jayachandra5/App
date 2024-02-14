@@ -8,7 +8,8 @@ const Constants = {
     EmployeTable :"employeeData",
     ProductTable :"purchased",
     purchaseTable:"Purchase",
-    salesTable:"salesTable"
+    salesTable:"salesTable",
+    expensesTable:"expensesTable"
   };
   
 module.exports = Constants;

@@ -242,15 +242,15 @@ const getqnt = async (stockName) => {
     const pool = await sql.connect(config); // Assuming config is globally accessible
 
     // Construct the SQL query
-    const query = 'SELECT stockname,quantity FROM '+ Constants.ProductTable + ' WHERE stockname = @stockName';
+    const query = 'SELECT stockname,quantity FROM ' + Constants.ProductTable + ' WHERE stockname = @stockName';
 
     // Execute the SQL query with the provided start and end dates
     const result = await pool.request()
       .input('stockName', stockName)
       .query(query);
 
-      console.log("Get Qnt");
-      console.log(result.recordset);
+    console.log("Get Qnt");
+    console.log(result.recordset);
 
     // Return the result
     return result.recordset;
@@ -260,13 +260,13 @@ const getqnt = async (stockName) => {
   }
 };
 
-const getOpening = async (stockName,date1) => {
+const getOpening = async (stockName, date1) => {
   try {
     // Create a new connection pool
     const pool = await sql.connect(config); // Assuming config is globally accessible
 
     // Construct the SQL query
-   //  const query = 'SELECT TOP 1 qntAvl FROM ' + Constants.purchaseTable + ' WHERE stockName = @stockName AND date < @date1 ORDER BY date DESC';
+    //  const query = 'SELECT TOP 1 qntAvl FROM ' + Constants.purchaseTable + ' WHERE stockName = @stockName AND date < @date1 ORDER BY date DESC';
     const query = 'SELECT TOP 1 stockName, qntAvl FROM ' + Constants.purchaseTable + ' WHERE stockName = @stockName AND date < @date1 ORDER BY date DESC';
 
     // Execute the SQL query with the provided start and end dates
@@ -275,9 +275,6 @@ const getOpening = async (stockName,date1) => {
       .input('date1', sql.DateTime, date1)
       .query(query);
 
-      console.log("opening");
-      console.log(result.recordset);
-
     // Return the result
     return result.recordset;
   } catch (error) {
@@ -286,14 +283,14 @@ const getOpening = async (stockName,date1) => {
   }
 };
 
-const getSales = async (stockName,date1,date2) => {
+const getSales = async (stockName, date1, date2) => {
   try {
     // Create a new connection pool
     const pool = await sql.connect(config); // Assuming config is globally accessible
 
     // Construct the SQL query
     const query = 'SELECT stockName, SUM(qnt) As totalQnt FROM ' + Constants.salesTable
-    + ' WHERE date BETWEEN  @date1 AND @date2  AND stockName= @stockName GROUP BY stockName';
+      + ' WHERE date BETWEEN  @date1 AND @date2  AND stockName= @stockName GROUP BY stockName';
 
     // Execute the SQL query with the provided start and end dates
     const result = await pool.request()
@@ -302,15 +299,134 @@ const getSales = async (stockName,date1,date2) => {
       .input('date2', sql.DateTime, date2)
       .query(query);
 
-      console.log("Sales");
-      console.log(result.recordset);
-    // Return the result
+    
     return result.recordset;
   } catch (error) {
     console.error('Error executing SQL query:', error);
     throw error; // Throw the error to be handled by the caller
   }
 };
+
+async function stockAmountSold(date1, date2) {
+  try {
+    const pool = await sql.connect(config); // Assuming config is globally accessible
+
+    const query = `
+          SELECT SUM(stock) AS totalStock 
+          FROM `+Constants.salesTable+ ` 
+          WHERE date BETWEEN @date1 AND @date2
+      `;
+
+    // Execute the SQL query with the provided start and end dates
+    const result = await pool.request()
+      .input('date1', sql.DateTime, date1)
+      .input('date2', sql.DateTime, date2)
+      .query(query);
+
+    // Extract the total stock sold from the result set
+    const totalStock = result.recordset[0].totalStock;
+
+    return totalStock;
+  } catch (error) {
+    console.error('Error fetching stock amount sold:', error);
+    throw error;
+  }
+}
+
+async function totalSales(date1, date2) {
+  try {
+    const pool = await sql.connect(config);
+    const query = `
+          SELECT SUM(amount) AS totalAmount 
+          FROM `+Constants.salesTable+ ` 
+          WHERE date BETWEEN @date1 AND @date2 
+          GROUP BY stockName
+      `;
+
+    const result = await pool.request()
+      .input('date1', sql.DateTime, date1)
+      .input('date2', sql.DateTime, date2)
+      .query(query);
+
+    const totalSales = result.recordset[0].totalAmount;
+   
+    return totalSales;
+  } catch (error) {
+    console.error('Error fetching total sales:', error);
+    throw error;
+  }
+}
+
+async function totalProfit(date1, date2) {
+  try {
+    const pool = await sql.connect(config);
+    const query = `
+          SELECT SUM(profit) AS totalProfit 
+          FROM `+Constants.salesTable+ ` 
+          WHERE date BETWEEN @date1 AND @date2 
+          GROUP BY stockName
+      `;
+
+    const result = await pool.request()
+      .input('date1', sql.DateTime, date1)
+      .input('date2', sql.DateTime, date2)
+      .query(query);
+
+    const totalProfit = result.recordset[0].totalProfit;
+    
+    return totalProfit;
+  } catch (error) {
+    console.error('Error fetching total profit:', error);
+    throw error;
+  }
+}
+
+async function totalPurchase(date1, date2) {
+  try {
+    const pool = await sql.connect(config);
+    const query = `
+          SELECT SUM(amount) AS totalAmount 
+          FROM `+Constants.purchaseTable+ ` 
+          WHERE date BETWEEN @date1 AND @date2 
+          GROUP BY stockName
+      `;
+
+    const result = await pool.request()
+      .input('date1', sql.DateTime, date1)
+      .input('date2', sql.DateTime, date2)
+      .query(query);
+
+    const totalPurchase = result.recordset[0].totalAmount;
+    
+    return totalPurchase;
+  } catch (error) {
+    console.error('Error fetching total purchase:', error);
+    throw error;
+  }
+}
+
+async function totalExpenses(date1, date2) {
+  try {
+    const pool = await sql.connect(config);
+    const query = `
+          SELECT SUM(amount) AS totalAmount 
+          FROM `+Constants.expensesTable+ ` 
+          WHERE date BETWEEN @date1 AND @date2
+      `;
+
+    const result = await pool.request()
+      .input('date1', sql.DateTime, date1)
+      .input('date2', sql.DateTime, date2)
+      .query(query);
+
+    const totalExpenses = result.recordset[0].totalAmount;
+    
+    return totalExpenses;
+  } catch (error) {
+    console.error('Error fetching total expenses:', error);
+    throw error;
+  }
+}
 
 const getReportDataFull = async (date1, date2) => {
   try {
@@ -319,7 +435,7 @@ const getReportDataFull = async (date1, date2) => {
     const fullReportData = [];
     let totalStockNames = 0;
     let finaltotalAmount = 0;
-    let totalQntAvl =0;
+    let totalQntAvl = 0;
     let totalQuantity = 0;
     let totalSales = 0;
 
@@ -374,14 +490,41 @@ app.get('/api/reportData', async (req, res) => {
   try {
     // Get full report data based on date range
     const fullReportData = await getReportDataFull(date1, date2);
-    console.log("Final Return");
-    console.log(fullReportData);
-    res.json(fullReportData);
+
+    // Calculate additional metrics
+    const totalStockSold = await stockAmountSold(date1, date2);
+    const totalSalesAmount = await totalSales(date1, date2);
+    const totalProfitAmount = await totalProfit(date1, date2);
+    const totalExpensesAmount = await totalExpenses(date1, date2);
+    const totalPurchaseAmount = await totalPurchase(date1, date2);
+
+    // Create totals object with additional metrics
+    const totals = {
+      totalStockNames: fullReportData.totals.totalStockNames,
+      finaltotalAmount: fullReportData.totals.finaltotalAmount,
+      totalQntAvl: fullReportData.totals.totalQntAvl,
+      totalQuantity: fullReportData.totals.totalQuantity,
+      totalSales: fullReportData.totals.totalSales,
+      totalStockSold,
+      totalSalesAmount,
+      totalProfitAmount,
+      totalExpensesAmount,
+      totalPurchaseAmount
+    };
+
+    // Add additional metrics to the report data
+    const reportWithAdditionalMetrics = {
+      ...fullReportData,
+      totals
+    };
+
+    res.json(reportWithAdditionalMetrics);
   } catch (error) {
     console.error('Error getting report data:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;
