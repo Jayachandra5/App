@@ -299,7 +299,7 @@ const getSales = async (stockName, date1, date2) => {
       .input('date2', sql.DateTime, date2)
       .query(query);
 
-    
+
     return result.recordset;
   } catch (error) {
     console.error('Error executing SQL query:', error);
@@ -313,7 +313,7 @@ async function stockAmountSold(date1, date2) {
 
     const query = `
           SELECT SUM(stock) AS totalStock 
-          FROM `+Constants.salesTable+ ` 
+          FROM `+ Constants.salesTable + ` 
           WHERE date BETWEEN @date1 AND @date2
       `;
 
@@ -338,7 +338,7 @@ async function totalSales(date1, date2) {
     const pool = await sql.connect(config);
     const query = `
           SELECT SUM(amount) AS totalAmount 
-          FROM `+Constants.salesTable+ ` 
+          FROM `+ Constants.salesTable + ` 
           WHERE date BETWEEN @date1 AND @date2 
           GROUP BY stockName
       `;
@@ -349,7 +349,7 @@ async function totalSales(date1, date2) {
       .query(query);
 
     const totalSales = result.recordset[0].totalAmount;
-   
+
     return totalSales;
   } catch (error) {
     console.error('Error fetching total sales:', error);
@@ -362,7 +362,7 @@ async function totalProfit(date1, date2) {
     const pool = await sql.connect(config);
     const query = `
           SELECT SUM(profit) AS totalProfit 
-          FROM `+Constants.salesTable+ ` 
+          FROM `+ Constants.salesTable + ` 
           WHERE date BETWEEN @date1 AND @date2 
           GROUP BY stockName
       `;
@@ -373,7 +373,7 @@ async function totalProfit(date1, date2) {
       .query(query);
 
     const totalProfit = result.recordset[0].totalProfit;
-    
+
     return totalProfit;
   } catch (error) {
     console.error('Error fetching total profit:', error);
@@ -386,7 +386,7 @@ async function totalPurchase(date1, date2) {
     const pool = await sql.connect(config);
     const query = `
           SELECT SUM(amount) AS totalAmount 
-          FROM `+Constants.purchaseTable+ ` 
+          FROM `+ Constants.purchaseTable + ` 
           WHERE date BETWEEN @date1 AND @date2 
           GROUP BY stockName
       `;
@@ -397,7 +397,7 @@ async function totalPurchase(date1, date2) {
       .query(query);
 
     const totalPurchase = result.recordset[0].totalAmount;
-    
+
     return totalPurchase;
   } catch (error) {
     console.error('Error fetching total purchase:', error);
@@ -410,7 +410,7 @@ async function totalExpenses(date1, date2) {
     const pool = await sql.connect(config);
     const query = `
           SELECT SUM(amount) AS totalAmount 
-          FROM `+Constants.expensesTable+ ` 
+          FROM `+ Constants.expensesTable + ` 
           WHERE date BETWEEN @date1 AND @date2
       `;
 
@@ -420,7 +420,7 @@ async function totalExpenses(date1, date2) {
       .query(query);
 
     const totalExpenses = result.recordset[0].totalAmount;
-    
+
     return totalExpenses;
   } catch (error) {
     console.error('Error fetching total expenses:', error);
@@ -492,11 +492,11 @@ app.get('/api/reportData', async (req, res) => {
     const fullReportData = await getReportDataFull(date1, date2);
 
     // Calculate additional metrics
-    const totalStockSold = await stockAmountSold(date1, date2);
-    const totalSalesAmount = await totalSales(date1, date2);
-    const totalProfitAmount = await totalProfit(date1, date2);
-    const totalExpensesAmount = await totalExpenses(date1, date2);
-    const totalPurchaseAmount = await totalPurchase(date1, date2);
+    const totalStockSold = parseFloat(await stockAmountSold(date1, date2)).toFixed(2);
+    const totalSalesAmount = parseFloat(await totalSales(date1, date2)).toFixed(2);
+    const totalProfitAmount = parseFloat(await totalProfit(date1, date2)).toFixed(2);
+    const totalExpensesAmount = parseFloat(await totalExpenses(date1, date2)).toFixed(2);
+    const totalPurchaseAmount = parseFloat(await totalPurchase(date1, date2)).toFixed(2);
 
     // Create totals object with additional metrics
     const totals = {

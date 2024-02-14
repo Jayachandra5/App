@@ -56,13 +56,22 @@ const Report = () => {
     };
     
     const handleDoneButtonPress = () => {
-        displayReport();
+       
         setIsDonePressed(true);
+        displayReport();
     };
     
     useEffect(() => {
+        if (isDonePressed) {
+            displayReport();
+        }
+    }, [isDonePressed]);
+
+   /* useEffect(() => {
         displayReport();
-    }, []);
+    }, []); */
+
+    
 
     const renderItem = ({ item }) => {
         return (
