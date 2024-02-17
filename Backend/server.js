@@ -51,7 +51,8 @@ app.post('/api/employeeAdd', async (req, res) => {
     // Check if the employee already exists
     const checkIfExists = await sql.query`SELECT * FROM employeeData WHERE empname = ${name}`;
     if (checkIfExists.recordset.length > 0) {
-      return res.status(400).json({ message: 'Employee already exists' });
+      console.log('Employee alredy exists');
+      return res.status(200).json({ message: 'Employee already exists' });
     }
 
     // If employee doesn't exist, add them to the database
