@@ -94,6 +94,33 @@ app.get('/api/CustomerDue', async (req, res) => {
   }
 });
 
+app.get('/api/displaytotalDues', async (req, res) => {
+  try {
+    // Connect to the database
+    await sql.connect(config);
+
+    // Query the database for totalourdues and totalcsdues
+    const result = await sql.query('SELECT name, SUM(amount) as totalDues FROM manage WHERE name IN (\'totalourdues\', \'totalcsdues\') GROUP BY name');
+
+    // Construct JSON response
+    let duesMap = {};
+    result.recordset.forEach(row => {
+      duesMap[row.name] = row.totalDues;
+    });
+
+    // Send the total dues to the React Native app
+    res.json(duesMap);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  } finally {
+    // Close the database connection
+    await sql.close();
+  }
+});
+
+
+
 app.get('/api/customers', async (req, res) => {
   try {
     // Connect to the database

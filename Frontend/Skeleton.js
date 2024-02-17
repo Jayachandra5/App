@@ -12,6 +12,7 @@ import SalesList from '../DisplayMenus/salesList';
 import ExpensesList from '../DisplayMenus/expensesList';
 import VendourDue from '../DisplayMenus/vendourDue';
 import CustomerDue from '../DisplayMenus/customerDue';
+import TotalDueList from '../DisplayMenus/totalDue';
 import EmployeeListData from '../DisplayMenus/employeeList';
 
 import Report from '../DisplayMenus/Report';
@@ -51,6 +52,9 @@ const Skeleton = ({ navigation }) => {
 
       case 'expensesList':
         return <ExpensesList />;
+
+      case 'totalDue':
+        return <TotalDueList />;
 
       case 'vendourDue':
         return <VendourDue />;
@@ -137,7 +141,7 @@ const Skeleton = ({ navigation }) => {
     if (isMenuVisible4) {
       return (
         <View style={styles.menuDropdown4}>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => setSelectedMenuItem('totalDue')}>
             <Icon name="circle" size={15} color="#333" />
             <Text>Total</Text>
           </TouchableOpacity>
