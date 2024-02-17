@@ -37,6 +37,35 @@ app.get('/api/data', async (req, res) => {
   }
 });
 
+// Middleware to parse JSON bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// API endpoint to add an employee
+app.post('/api/employeeAdd', async (req, res) => {
+  const { name, salary } = req.body;
+  
+  try {
+    await sql.connect(config);
+    
+    // Check if the employee already exists
+    const checkIfExists = await sql.query`SELECT * FROM employeeData WHERE empname = ${name}`;
+    if (checkIfExists.recordset.length > 0) {
+      return res.status(400).json({ message: 'Employee already exists' });
+    }
+
+    // If employee doesn't exist, add them to the database
+    const result = await sql.query`INSERT INTO employeeData (empname, salary) VALUES (${name}, ${salary})`;
+    console.log('Employee added successfully');
+    res.status(201).json({ message: 'Employee added successfully' });
+  } catch (error) {
+    console.error('Error adding employee:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  } finally {
+    await sql.close();
+  }
+});
+
 app.get('/api/employeeList', async (req, res) => {
   try {
     // Connect to the database
@@ -120,25 +149,6 @@ app.get('/api/displaytotalDues', async (req, res) => {
 });
 
 
-
-app.get('/api/customers', async (req, res) => {
-  try {
-    // Connect to the database
-    await sql.connect(config);
-
-    // Query the database for customer table
-    const result = await sql.query('SELECT * FROM customerTableDataFinal');
-
-    // Send the data to the React Native app
-    res.json(result.recordset);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
-  } finally {
-    // Close the database connection
-    await sql.close();
-  }
-});
 
 app.get('/api/customers', async (req, res) => {
   try {
