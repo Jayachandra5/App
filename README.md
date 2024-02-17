@@ -1,5 +1,3 @@
-Certainly! Here's how you can format the description for a GitHub README:
-
 # Business Management System (BMS)
 
 The Business Management System (BMS) is a comprehensive solution designed specifically for Small and Medium-Scale Enterprises (SMEs). It consists of mobile and desktop applications seamlessly connected via cloud infrastructure. BMS offers a range of functionalities to streamline various aspects of business operations, including inventory management, human resources, expenses tracking, and insightful analytics.
