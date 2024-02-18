@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Button } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import axios from 'axios';
 
 const EmployeeAttendance = () => {
   const [employees, setEmployees] = useState([]);
   const [attendanceStatus, setAttendanceStatus] = useState({});
+  const [selectedAttendance, setSelectedAttendance] = useState('Absent');
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -23,32 +24,25 @@ const EmployeeAttendance = () => {
     // Set default attendance status for all employees as Absent
     const defaultAttendance = {};
     employees.forEach((employee) => {
-      defaultAttendance[employee.id] = 'Absent';
+      defaultAttendance[employee.empname] = 'Absent';
     });
     setAttendanceStatus(defaultAttendance);
   }, [employees]);
 
-  const handleAttendanceChange = (status) => {
-    // Update attendance for all employees
-    const updatedAttendance = {};
-    Object.keys(attendanceStatus).forEach((employeeId) => {
-      updatedAttendance[employeeId] = status;
-    });
-    setAttendanceStatus(updatedAttendance);
+  const handleAttendanceChange = (empname, status) => {
+    setAttendanceStatus({ ...attendanceStatus, [empname]: status });
   };
 
   const markAttendance = async () => {
     try {
-      // Update attendance for all employees in the backend
-      await Promise.all(
-        Object.keys(attendanceStatus).map((employeeId) =>
-          axios.post('http://192.168.56.1:5000/api/employeeAttendance', {
-            empId: employeeId,
-            attendance: attendanceStatus[employeeId],
-          })
-        )
-      );
-      console.log('Attendance marked successfully');
+      // Loop through each employee and mark attendance
+      for (const employee of employees) {
+        const status = attendanceStatus[employee.empname] || 'Absent';
+        await axios.post('http://192.168.56.1:5000/api/employeeAttendance', {
+          empname: employee.empname,
+          attendance: status
+        });
+      }
     } catch (error) {
       console.error('Error marking attendance:', error);
     }
@@ -59,45 +53,37 @@ const EmployeeAttendance = () => {
       <Text style={styles.heading}>Employee Attendance</Text>
 
       <View style={styles.headingRow}>
-        <Text style={styles.subHeading}>Present</Text>
+        <Text style={styles.subHeading}>Employee Name</Text>
+        <Text style={styles.subHeading}>              Present</Text>
         <Text style={styles.subHeading}>Half Present</Text>
         <Text style={styles.subHeading}>Absent</Text>
       </View>
 
-      <ScrollView style={{ flex: 1 }}>
+      <View>
         {employees.map((employee) => (
           <View key={employee.id} style={styles.employeeRow}>
             <Text>{employee.empname}</Text>
             <View style={styles.radioGroup}>
               <TouchableOpacity
-                style={[
-                  styles.radioButton,
-                  attendanceStatus[employee.id] === 'Present' && styles.radioButtonSelected,
-                ]}
-                onPress={() => setAttendanceStatus({ ...attendanceStatus, [employee.id]: 'Present' })}
+                style={[styles.radioButton, attendanceStatus[employee.empname] === 'Present' && styles.radioButtonSelected]}
+                onPress={() => handleAttendanceChange(employee.empname, 'Present')}
               />
               <TouchableOpacity
-                style={[
-                  styles.radioButton,
-                  attendanceStatus[employee.id] === 'Half Present' && styles.radioButtonSelected,
-                ]}
-                onPress={() => setAttendanceStatus({ ...attendanceStatus, [employee.id]: 'Half Present' })}
+                style={[styles.radioButton, attendanceStatus[employee.empname] === 'Half Present' && styles.radioButtonSelected]}
+                onPress={() => handleAttendanceChange(employee.empname, 'Half Present')}
               />
               <TouchableOpacity
-                style={[
-                  styles.radioButton,
-                  attendanceStatus[employee.id] === 'Absent' && styles.radioButtonSelected,
-                ]}
-                onPress={() => setAttendanceStatus({ ...attendanceStatus, [employee.id]: 'Absent' })}
+                style={[styles.radioButton, attendanceStatus[employee.empname] === 'Absent' && styles.radioButtonSelected]}
+                onPress={() => handleAttendanceChange(employee.empname, 'Absent')}
               />
             </View>
           </View>
         ))}
-      </ScrollView>
-
-      <View style={styles.buttonContainer}>
-        <Button title="Done" onPress={markAttendance} />
       </View>
+
+      <TouchableOpacity style={styles.doneButtonContainer} onPress={markAttendance}>
+        <Text style={styles.doneButtonText}>Done</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -111,6 +97,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 10,
   },
+  heading: {
+    fontSize: 20,
+    marginBottom: 10,
+  },
   headingRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -118,6 +108,11 @@ const styles = StyleSheet.create({
   },
   subHeading: {
     fontWeight: 'bold',
+  },
+  attendanceOptions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
   },
   employeeRow: {
     flexDirection: 'row',
@@ -140,8 +135,15 @@ const styles = StyleSheet.create({
   radioButtonSelected: {
     backgroundColor: 'black',
   },
-  buttonContainer: {
-    marginTop: 20,
+  doneButtonContainer: {
+    backgroundColor: 'black',
+    paddingVertical: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  doneButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
 
