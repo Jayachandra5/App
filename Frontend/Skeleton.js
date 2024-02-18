@@ -16,6 +16,7 @@ import TotalDueList from '../DisplayMenus/totalDue';
 import EmployeeListData from '../DisplayMenus/employeeList';
 
 import EmployeeAdd from '../DisplayMenus/EmployeeAdd';
+import EmployeeAttendance from '../DisplayMenus/EmployeeAttendance';
 
 import Report from '../DisplayMenus/Report';
 
@@ -42,6 +43,9 @@ const Skeleton = ({ navigation }) => {
 
       case 'employeeList':
         return <EmployeeListData />;
+
+      case 'employeeAttendance':
+        return <EmployeeAttendance />;
 
       case 'customerList':
         return <CustomerList />;
@@ -110,7 +114,7 @@ const Skeleton = ({ navigation }) => {
             <Icon name="circle" size={15} color="#333" />
             <Text>Add</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => setSelectedMenuItem('employeeAttendance')}>
             <Icon name="circle" size={15} color="#333" />
             <Text>Attandance</Text>
           </TouchableOpacity>

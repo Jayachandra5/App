@@ -9,7 +9,8 @@ const Constants = {
     ProductTable :"purchased",
     purchaseTable:"Purchase",
     salesTable:"salesTable",
-    expensesTable:"expensesTable"
+    expensesTable:"expensesTable",
+    employeeAttendanceTable:"employeeAttendance"
   };
   
 module.exports = Constants;
