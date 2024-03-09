@@ -117,6 +117,26 @@ app.get('/api/employeeList', async (req, res) => {
   }
 });
 
+app.get('/api/EmployeeAttendanceList', async (req, res) => {
+  try {
+    // Connect to the database
+    await sql.connect(config);
+
+    // Query the database
+    const result = await sql.query('SELECT * FROM employeeAttendance');
+
+    console.log(result.recordset);
+    // Send the data to the React Native app
+    res.json(result.recordset);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  } finally {
+    // Close the database connection
+    await sql.close();
+  }
+});
+
 app.get('/api/vendourDue', async (req, res) => {
   try {
     // Connect to the database
