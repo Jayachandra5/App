@@ -137,6 +137,35 @@ app.get('/api/EmployeeAttendanceList', async (req, res) => {
   }
 });
 
+app.post('/api/expensesAdd', async (req, res) => {
+  const { empname, attendance } = req.body;
+
+  let wdToAdd = 0;
+  if (attendance === 'Present') {
+    wdToAdd = 1;
+  } else if (attendance === 'Half Present') {
+    wdToAdd = 0.5;
+  }
+  console.log(req.body);
+
+  try {
+    // Create a new connection pool
+    const pool = await sql.connect(config);
+
+    // Run the update query
+    const result = await pool.request()
+      .input('wdToAdd', sql.Float, wdToAdd)
+      .input('empname', sql.NVarChar, empname)
+      .query('UPDATE '+Constants.employeeAttendanceTable+' SET wd = wd + @wdToAdd WHERE empname = @empname');
+
+    console.log('Attendance updated successfully');
+    res.status(200).json({ message: 'Attendance updated successfully' });
+  } catch (err) {
+    console.error('Error updating attendance:', err);
+    res.status(500).json({ message: 'Error updating attendance' });
+  }
+});
+
 app.get('/api/vendourDue', async (req, res) => {
   try {
     // Connect to the database
