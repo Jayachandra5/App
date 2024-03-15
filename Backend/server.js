@@ -156,7 +156,7 @@ app.post('/api/expensesAdd', async (req, res) => {
     const result = await pool.request()
       .input('wdToAdd', sql.Float, wdToAdd)
       .input('empname', sql.NVarChar, empname)
-      .query('UPDATE '+Constants.employeeAttendanceTable+' SET wd = wd + @wdToAdd WHERE empname = @empname');
+      .query('UPDATE '+Constants.expensesTable+' SET wd = wd + @wdToAdd WHERE empname = @empname');
 
     console.log('Attendance updated successfully');
     res.status(200).json({ message: 'Attendance updated successfully' });
