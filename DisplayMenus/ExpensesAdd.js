@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import { Picker, PickerIOS } from '@react-native-picker/picker'; // Import Picker from @react-native-picker/picker
+import { Picker } from '@react-native-picker/picker'; // Import Picker from @react-native-picker/picker
 import axios from 'axios';
 
 const ExpensesAdd = () => {
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState('Rent'); // Default option selected
   const [otherName, setOtherName] = useState('');
   const [salary, setSalary] = useState('');
   const [message, setMessage] = useState('');
 
-  const options = ['Rent', 'Tax', 'Bills', 'Spolied', 'Others'];
+  const options = ['Rent', 'Tax', 'Bills', 'Spoiled', 'Others'];
 
   const handleOptionChange = (itemValue) => {
+    console.log("Selected Option:", itemValue); // Check the selected option
     setSelectedOption(itemValue);
   };
 
@@ -19,27 +20,58 @@ const ExpensesAdd = () => {
     setOtherName(text);
   };
 
-  const handleSalaryChange = (text) => {
+  const handleExpensesChange = (text) => {
     setSalary(text);
   };
 
-  const handleAddEmployee = async () => {
+  const handleAddExpenses = async () => {
     try {
-      const name = selectedOption === 'Others' ? otherName : selectedOption;
+      let name = '';
+      let expenses = 0;
+      const currentDate = new Date().toISOString().split('T')[0];
+
+      switch (selectedOption) {
+        case 'Rent':
+          name = 'Rent Paid on ' + currentDate;
+          expenses = salary;
+          console.log("In Rent case");
+          break;
+        case 'Tax':
+          name = 'Tax Paid on ' + currentDate;
+          expenses = salary;
+          break;
+        case 'Bills':
+          name = otherName + ' Bill';
+          expenses = salary;
+          break;
+        case 'Spoiled':
+          name = otherName;
+          expenses = salary;
+          break;
+        case 'Others':
+          name = otherName;
+          expenses = salary;
+          break;
+        default:
+          break;
+      }
+
+      console.log(name, expenses, currentDate);
+
       const response = await axios.post('http://192.168.56.1:5000/api/expensesAdd', {
         name: name,
-        salary: salary,
+        amount: expenses,
+        date: currentDate,
       });
-      setMessage(response.data.message);
-      if (!response.data.message.includes('already exists')) {
-        // Clear input fields only if employee doesn't already exist
-        setSelectedOption('');
-        setOtherName('');
-        setSalary('');
-      }
+
+      setMessage('Expenses added successfully');
+      // Clear text fields
+      setOtherName('');
+      setSalary('');
+      
     } catch (error) {
-      console.error('Error adding employee:', error);
-      setMessage('Error adding employee');
+      console.error('Error adding expenses:', error);
+      setMessage('Error adding expenses');
     }
   };
 
@@ -71,7 +103,7 @@ const ExpensesAdd = () => {
             onChangeText={handleOtherNameChange}
           />
         )}
-        {selectedOption === 'Spolied' && (
+        {selectedOption === 'Spoiled' && (
           <>
             <TextInput
               style={styles.input}
@@ -93,11 +125,11 @@ const ExpensesAdd = () => {
           style={styles.input}
           placeholder="Enter Amount"
           value={salary}
-          onChangeText={handleSalaryChange}
+          onChangeText={handleExpensesChange}
           keyboardType="numeric"
         />
-        <Button title="Add " onPress={handleAddEmployee} />
-        {message ? <Text style={[styles.message, { color: message.includes('already exists') ? 'red' : 'green' }]}>{message}</Text> : null}
+        <Button title="Add " onPress={handleAddExpenses} />
+        {message ? <Text style={[styles.message, { color: message.includes('error') ? 'red' : 'green' }]}>{message}</Text> : null}
       </View>
     </View>
   );

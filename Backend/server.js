@@ -87,7 +87,7 @@ app.post('/api/employeeAttendance', async (req, res) => {
     const result = await pool.request()
       .input('wdToAdd', sql.Float, wdToAdd)
       .input('empname', sql.NVarChar, empname)
-      .query('UPDATE '+Constants.employeeAttendanceTable+' SET wd = wd + @wdToAdd WHERE empname = @empname');
+      .query('UPDATE ' + Constants.employeeAttendanceTable + ' SET wd = wd + @wdToAdd WHERE empname = @empname');
 
     console.log('Attendance updated successfully');
     res.status(200).json({ message: 'Attendance updated successfully' });
@@ -138,33 +138,50 @@ app.get('/api/EmployeeAttendanceList', async (req, res) => {
 });
 
 app.post('/api/expensesAdd', async (req, res) => {
-  const { empname, attendance } = req.body;
-
-  let wdToAdd = 0;
-  if (attendance === 'Present') {
-    wdToAdd = 1;
-  } else if (attendance === 'Half Present') {
-    wdToAdd = 0.5;
-  }
-  console.log(req.body);
+  const { name, amount, date } = req.body;
 
   try {
     // Create a new connection pool
     const pool = await sql.connect(config);
 
-    // Run the update query
-    const result = await pool.request()
-      .input('wdToAdd', sql.Float, wdToAdd)
-      .input('empname', sql.NVarChar, empname)
-      .query('UPDATE '+Constants.expensesTable+' SET wd = wd + @wdToAdd WHERE empname = @empname');
+    console.log (name, amount, date );
 
-    console.log('Attendance updated successfully');
-    res.status(200).json({ message: 'Attendance updated successfully' });
+    // Check if attendance record exists
+    const checkExpensesQuery = `SELECT * FROM ` + Constants.expensesTable + ` WHERE name = @name AND date = @date`;
+    const checkExpensesResult = await pool.request()
+      .input('name', sql.NVarChar, name)
+      .input('date', sql.NVarChar, date)
+      .query(checkExpensesQuery);
+
+    if (checkExpensesResult.recordset.length > 0) {
+      // If record exists, update it
+      const updateExpensesQuery = `UPDATE ` + Constants.expensesTable + ` SET amount = amount + @amount WHERE name = @name AND date = @date`;
+      await pool.request()
+        .input('amount', sql.Float, amount)
+        .input('name', sql.NVarChar, name)
+        .input('date', sql.NVarChar, date)
+        .query(updateExpensesQuery);
+
+      console.log('Expenses updated successfully');
+      res.status(200).json({ message: 'Expenses updated successfully' });
+    } else {
+      // If record doesn't exist, insert a new one
+      const insertExpensesQuery = `INSERT INTO ${Constants.expensesTable} (name, amount, date) VALUES (@name, @amount, @date)`;
+      await pool.request()
+        .input('name', sql.NVarChar, name)
+        .input('amount', sql.Float, amount)
+        .input('date', sql.NVarChar, date)
+        .query(insertExpensesQuery);
+
+      console.log('Expenses added successfully');
+      res.status(200).json({ message: 'Expenses added successfully' });
+    }
   } catch (err) {
-    console.error('Error updating attendance:', err);
-    res.status(500).json({ message: 'Error updating attendance' });
+    console.error('Error updating/adding Expenses :', err);
+    res.status(500).json({ message: 'Error updating/adding Expenses' });
   }
 });
+
 
 app.get('/api/vendourDue', async (req, res) => {
   try {
